@@ -1,0 +1,6 @@
+@BloodDonationSystem.APIServices.BE.HungHK_HostAddress = http://localhost:5224
+
+GET {{BloodDonationSystem.APIServices.BE.HungHK_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,190 @@
+﻿@{
+	ViewData["Title"] = "Report Types";
+}
+
+<h1 class="mb-4">Report Types</h1>
+
+<!-- Nút Create New -->
+<div class="d-flex justify-content-start mb-3">
+	<button type="button" class="btn btn-success" onclick="addNew();">Create New</button>
+</div>
+
+<!-- Table hiển thị danh sách -->
+<table class="table table-bordered align-middle">
+	<thead class="table-secondary fw-bold text-center">
+		<tr>
+			<th>Type Name</th>
+			<th>Description</th>
+			<th style="width: 220px;">Actions</th>
+		</tr>
+	</thead>
+	<tbody class="tblBody">
+		<!-- Dữ liệu sẽ được load bằng JS -->
+	</tbody>
+</table>
+
+
+<!-- Modal Create / Edit -->
+<div class="modal fade" id="reportTypesModal" tabindex="-1" aria-labelledby="reportTypesModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmReportTypes" }))
+			{
+				@Html.AntiForgeryToken()
+				<div class="modal-header">
+					<h5 class="modal-title" id="reportTypesModalLabel">Create / Edit Report Type</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="reportTypeHungHkid" />
+					<div class="mb-3">
+						<label class="form-label">Type Name</label>
+						<input type="text" id="typeName" class="form-control" required />
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Description</label>
+						<textarea id="description" class="form-control" rows="3"></textarea>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button id="btSave" type="button" class="btn btn-primary">Save</button>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">❌ Close</button>
+				</div>
+			}
+		</div>
+	</div>
+</div>
+
+<!-- Modal Detail -->
+<div class="modal fade" id="reportTypesDetailModal" tabindex="-1" aria-labelledby="reportTypesDetailModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Report Type Details</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p><strong>Type Name:</strong> <span id="detailTypeName"></span></p>
+				<p><strong>Description:</strong> <span id="detailDescription"></span></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">❌ Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section scripts {
+	<script type="text/javascript">
+		const apiBase = 'https://localhost:7016/api/ReportTypesHungHk';
+
+		$(document).ready(function () {
+			loadData();
+		});
+
+		function loadData() {
+			$.ajax({
+				url: apiBase,
+				type: "GET",
+				contentType: "application/json",
+				success: function (result) {
+					let html = '';
+					$.each(result, function (i, item) {
+								html += '<tr>';
+						html += '<td class="text-start align-middle">' + item.typeName + '</td>';
+						html += '<td class="text-start align-middle">' + item.description + '</td>';
+						html += '<td class="text-center align-middle">';
+						html += '<button class="btn btn-warning btn-sm me-1 text-white" onclick="editReportType(' + item.reportTypeHungHkid + ')">Edit</button>';
+						html += '<button class="btn btn-info btn-sm me-1  onclick="viewDetail(' + item.reportTypeHungHkid + ')">Detail</button>';
+						html += '<button class="btn btn-danger btn-sm" onclick="deleteReportType(' + item.reportTypeHungHkid + ')">Delete</button>';
+						html += '</td></tr>';
+					});
+					$('.tblBody').html(html);
+				},
+				error: function (xhr) {
+					alert("Error loading data: " + xhr.responseText);
+				}
+			});
+		}
+
+		function addNew() {
+			$('#reportTypeHungHkid').val(0);
+			$('#typeName').val('');
+			$('#description').val('');
+			$('#reportTypesModal').modal('show');
+		}
+
+		function editReportType(id) {
+			$.ajax({
+				url: apiBase + '/' + id,
+				type: 'GET',
+				success: function (data) {
+					$('#reportTypeHungHkid').val(data.reportTypeHungHkid);
+					$('#typeName').val(data.typeName);
+					$('#description').val(data.description);
+					$('#reportTypesModal').modal('show');
+				},
+				error: function () {
+					alert('Cannot load data for edit!');
+				}
+			});
+		}
+
+		function viewDetail(id) {
+			$.ajax({
+				url: apiBase + '/' + id,
+				type: 'GET',
+				success: function (data) {
+					$('#detailTypeName').text(data.typeName);
+					$('#detailDescription').text(data.description);
+					$('#reportTypesDetailModal').modal('show');
+				},
+				error: function () {
+					alert('Cannot load detail!');
+				}
+			});
+		}
+
+		function deleteReportType(id) {
+			if (!confirm("Are you sure you want to delete this report type?")) return;
+
+			$.ajax({
+				url: apiBase + '/' + id,
+				type: 'DELETE',
+				success: function () {
+					alert("Deleted successfully!");
+					loadData();
+				},
+				error: function () {
+					alert("Delete failed!");
+				}
+			});
+		}
+
+		$("#btSave").click(function () {
+			const id = parseInt($("#reportTypeHungHkid").val()) || 0;
+
+			const data = {
+				reportTypeHungHkid: id,
+				typeName: $("#typeName").val(),
+				description: $("#description").val()
+			};
+
+			const method = id === 0 ? 'POST' : 'PUT';
+
+			$.ajax({
+				type: method,
+				url: apiBase,
+				contentType: 'application/json',
+				data: JSON.stringify(data),
+				success: function () {
+					$('#reportTypesModal').modal('hide');
+					loadData();
+				},
+				error: function (xhr) {
+					alert("Save failed: " + xhr.responseText);
+				}
+			});
+		});
+	</script>
+}

@@ -1,0 +1,121 @@
+﻿@model BloodDonationSystem.Repositories.HungHK.Models.ReportsHungHk
+
+@{
+    ViewData["Title"] = "Create Report";
+}
+
+<style>
+    html, body {
+        overflow-y: overlay;
+        scrollbar-width: none;
+    }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+    .create-form-container {
+        max-width: 700px;
+        margin: 0 auto;
+        max-height: 650px;
+        overflow-y: auto;
+    }
+
+    .form-group {
+        margin-bottom: 0.6rem;
+    }
+</style>
+
+<div class="container py-4 create-form-container">
+    <div class="text-center mb-3">
+        <h4 class="fw-bold text-primary">Create New Report</h4>
+    </div>
+
+    <div class="card border border-secondary shadow-sm bg-white rounded-3">
+        <div class="card-body px-3 py-3">
+            <form asp-action="Create" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label asp-for="ReportDate" class="form-label fw-semibold">Report Date</label>
+                        <input asp-for="ReportDate" class="form-control" readonly />
+                        <span asp-validation-for="ReportDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="ReportTypeId" class="form-label fw-semibold">Report Type</label>
+                        <select asp-for="ReportTypeId" class="form-select" asp-items="ViewBag.ReportTypeId"></select>
+                        <span asp-validation-for="ReportTypeId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="TotalUsers" class="form-label fw-semibold">Total Users</label>
+                        <input asp-for="TotalUsers" class="form-control" />
+                        <span asp-validation-for="TotalUsers" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="TotalDonors" class="form-label fw-semibold">Total Donors</label>
+                        <input asp-for="TotalDonors" class="form-control" />
+                        <span asp-validation-for="TotalDonors" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="TotalRecipients" class="form-label fw-semibold">Total Recipients</label>
+                        <input asp-for="TotalRecipients" class="form-control" />
+                        <span asp-validation-for="TotalRecipients" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="TotalBloodUnits" class="form-label fw-semibold">Total Blood Units</label>
+                        <input asp-for="TotalBloodUnits" class="form-control" />
+                        <span asp-validation-for="TotalBloodUnits" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="TotalRequests" class="form-label fw-semibold">Total Requests</label>
+                        <input asp-for="TotalRequests" class="form-control" />
+                        <span asp-validation-for="TotalRequests" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="TotalDonations" class="form-label fw-semibold">Total Donations</label>
+                        <input asp-for="TotalDonations" class="form-control" />
+                        <span asp-validation-for="TotalDonations" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="MostNeededBloodType" class="form-label fw-semibold">Blood Type</label>
+                        <input asp-for="MostNeededBloodType" class="form-control" />
+                        <span asp-validation-for="MostNeededBloodType" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label fw-semibold">Status</label>
+                        <select asp-for="Status" class="form-select"
+                                asp-items="@(new SelectList(new[] {
+                                                                    new { Value = true, Text = "Active" },
+                                                                    new { Value = false, Text = "Inactive" }
+                                                                }, "Value", "Text"))">
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label fw-semibold">Generated By</label>
+                        <input type="text" class="form-control" value="@ViewBag.CurrentUserName" readonly />
+                        <input type="hidden" name="GeneratedBy" value="@ViewBag.CurrentUserId" />
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-success px-4">Create</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary ms-3 px-4">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+@{
+await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}
