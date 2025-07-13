@@ -1,0 +1,44 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.slnLaunch 
+
+# Build results
+bin/
+obj/
+out/
+
+# ASP.NET Core secrets
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/secrets.json
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Logs & temp
+*.log
+*.tlog
+*.tmp
+
+# Publish output
+publish/
+*.Publish.xml
+
+# Others
+*.swp
+*.bak
+*.cache
+
+# System
+Thumbs.db
+.DS_Store
+
+# Git
+*.orig
