@@ -6,3 +6,12 @@
 - Xác thực bằng **JWT Token**
 - Backend viết bằng **ASP.NET Core Web API**
 - Frontend viết bằng **ASP.NET MVC (Razor View)**
+  
+## ✨ Chức năng chính
+- Đăng nhập bằng JWT (Token lưu ở Cookie)
+- Thêm / sửa / xóa / xem loại báo cáo (`ReportType`)
+- Thêm / sửa / xóa / xem báo cáo (`Report`)
+- Tự động lấy tên người tạo từ token
+- Giao diện sử dụng **Bootstrap** 
+- Modal form, xác nhận xóa, toast thông báo, v.v.
+
